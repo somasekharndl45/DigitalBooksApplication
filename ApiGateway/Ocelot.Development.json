@@ -1,0 +1,178 @@
+{
+  //https://localhost:7224/Authentication
+
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/Authentication",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "POST",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7224
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Authentication", //From api gateway
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Reader/SearchBooks",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "GET",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7125
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Books", //From api gateway
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Reader/ReadPurchasedBook",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "GET",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7125
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ReadBook", //From api gateway
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Payment/PurchaseBook",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "POST",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7285
+        }
+      ],
+      "UpstreamPathTemplate": "/api/BuyBook", //From api gateway
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Payment/VieworDownloadInvoice",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "GET",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7285
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ViewInvoice", //From api gateway
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Payment/ViewPaymentHistory",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "GET",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7285
+        }
+      ],
+      "UpstreamPathTemplate": "/api/ViewPaymentHistory", //From api gateway
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Payment/AskForRefund",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "GET",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7285
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Refund", //From api gateway
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Author/CreateAccount",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "POST",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7011
+        }
+      ],
+      "UpstreamPathTemplate": "/api/NewAccount", //From api gateway
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Author/Login",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "GET",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7011
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Login", //From api gateway
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Author/CreateBook",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "POST",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7011
+        }
+      ],
+      "UpstreamPathTemplate": "/api/CreateBook", //From api gateway
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Author/EditBook",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "PUT",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7011
+        }
+      ],
+      "UpstreamPathTemplate": "/api/EditBook", //From api gateway
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Author/BlockorUnlockBook",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "PUT",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7011
+        }
+      ],
+      "UpstreamPathTemplate": "/api/BlockorUnblockBook", //From api gateway
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Author/NotifyReader",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "GET",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7011
+        }
+      ],
+      "UpstreamPathTemplate": "/api/NotifyReader", //From api gateway
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7109"
+  }
+}
