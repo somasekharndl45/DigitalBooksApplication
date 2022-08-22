@@ -1,56 +1,65 @@
-﻿using CommonUtility.DatabaseEntity;
-using CommonUtility.Model;
+﻿using CommonUtilities.CommonVariables;
+using CommonUtilities.Model;
+using CommonUtilities.ViewModels;
 
 namespace PaymentApi.Services
 {
     public class PaymentService : IPaymentService
     {
-        public DigitalBookDBContext DBContext { get; set; }
+        public BookDatabaseContext dbContext { get; set; }
 
-        public PaymentService(DigitalBookDBContext DigitalBookDBContext)
+        public PaymentService(BookDatabaseContext bookDatabaseContext)
         {
-            DBContext = DigitalBookDBContext;
+            dbContext = bookDatabaseContext;
         }
 
-        public string BuyBook(Buyer buyer)
+        /// <summary>
+        /// Make payment to buy
+        /// </summary>
+        /// <param name="buyer">Object has Buyer(reader) details</param>
+        /// <returns></returns>
+        public int BuyBook(Buyer buyer)
         {
-            try
-            {
-                long bookId = DBContext.Books.Where(book => book.Title == buyer.BookName).Select(book => book.BookId).FirstOrDefault();                 
+                int bookId = dbContext.Books.Where(book => book.Title == buyer.BookName).Select(book => book.BookId).FirstOrDefault();                 
                 Payment paymentEntity = new Payment();
                 paymentEntity.BuyerName = buyer.BuyerName;
-                paymentEntity.BuyerEmailId = buyer.EmailId;
+                paymentEntity.BuyerEmail = buyer.EmailId;
                 paymentEntity.BookId = bookId;
                 paymentEntity.PaymentDate = DateTime.Now;
-                DBContext.Payments.Add(paymentEntity);
-                DBContext.SaveChanges();
-                long paymentId = DBContext.Payments.Where(p => p.PaymentDate == paymentEntity.PaymentDate).Select(p => p.PaymentId).FirstOrDefault();
-                return $"Your payment is successful and you payment id is {paymentId}";
-            }
-            catch(Exception ex)
-            {
-                return ex.Message;
-            }
+                dbContext.Payments.Add(paymentEntity);
+                dbContext.SaveChanges();
+                int paymentId = dbContext.Payments.Where(p => p.PaymentDate == paymentEntity.PaymentDate).Select(p => p.PaymentId).FirstOrDefault();
+                return paymentId;
         }
 
-        public Invoice GetInvoice(long paymentId)
+        /// <summary>
+        /// Get Invoice
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <returns>Invoice</returns>
+        public Invoice GetInvoice(int paymentId)
         {
             Payment paymentEntity = new Payment();
-            paymentEntity = DBContext.Payments.Where(p => p.PaymentId == paymentId).FirstOrDefault();
-            string bookName = DBContext.Books.Where(b => b.BookId == paymentEntity.BookId).Select(b => b.Title).FirstOrDefault();
+            paymentEntity = dbContext.Payments.Where(p => p.PaymentId == paymentId).FirstOrDefault();
+            string bookName = dbContext.Books.Where(b => b.BookId == paymentEntity.BookId).Select(b => b.Title).FirstOrDefault();
             Invoice invoice = new Invoice();
             invoice.PaymentId = paymentId;
             invoice.PaymentDate = paymentEntity.PaymentDate;
             invoice.BuyerName = paymentEntity.BuyerName;
-            invoice.BuyerEmailId = paymentEntity.BuyerEmailId;
+            invoice.BuyerEmailId = paymentEntity.BuyerEmail;
             invoice.BookName = bookName;
             return invoice;
         }
 
+        /// <summary>
+        /// Get payment hostory
+        /// </summary>
+        /// <param name="emailID">email id</param>
+        /// <returns>payment history details</returns>
         public List<Invoice> GetPaymentHistory(string emailID)
         {
             List<Payment> paymentEntityList = new List<Payment>();
-            paymentEntityList = DBContext.Payments.Where(x => x.BuyerEmailId == emailID).ToList();
+            paymentEntityList = dbContext.Payments.Where(x => x.BuyerEmail == emailID).ToList();
 
             List<Invoice> paymenthistoryList = new List<Invoice>();
 
@@ -61,7 +70,7 @@ namespace PaymentApi.Services
                 invoice.PaymentDate = item.PaymentDate;
                 invoice.BuyerName = item.BuyerName;
                 invoice.BuyerEmailId = emailID;
-                string bookName = DBContext.Books.Where(b => b.BookId == item.BookId).Select(b => b.Title).FirstOrDefault();
+                string bookName = dbContext.Books.Where(b => b.BookId == item.BookId).Select(b => b.Title).FirstOrDefault();
                 invoice.BookName = bookName;
                 paymenthistoryList.Add(invoice);
             }
@@ -69,9 +78,14 @@ namespace PaymentApi.Services
             return paymenthistoryList;
         }
 
-        public string GetRefund(long paymentId)
+        /// <summary>
+        /// Get refund
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <returns>Message on refund</returns>
+        public string GetRefund(int paymentId)
         {
-            DateTime paymentDate = DBContext.Payments.Where(x => x.PaymentId == paymentId).Select(x => x.PaymentDate).FirstOrDefault();
+            DateTime paymentDate = dbContext.Payments.Where(x => x.PaymentId == paymentId).Select(x => x.PaymentDate).FirstOrDefault();
             bool isLessThan24Hours = Math.Abs(paymentDate.Subtract(DateTime.Now).TotalHours) <= 24;
             if (isLessThan24Hours)
             {

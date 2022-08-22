@@ -1,4 +1,4 @@
-﻿namespace CommonUtility.Model
+﻿namespace CommonUtilities.ViewModels
 {
     public class ReadBook
     {

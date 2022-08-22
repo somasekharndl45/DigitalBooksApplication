@@ -1,11 +1,11 @@
-﻿using CommonUtility.DatabaseEntity;
+﻿using CommonUtilities.Model;
 
 namespace AuthorApi.Services
 {
     public interface INotificationService
     {
-        DigitalBookDBContext DBContext { get; set; }
+        BookDatabaseContext dbContext { get; set; }
 
-        List<string>? sendNotification();
+        //List<string>? sendNotification();
     }
 }

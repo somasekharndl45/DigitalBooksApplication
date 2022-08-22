@@ -1,14 +1,14 @@
-﻿using CommonUtility.DatabaseEntity;
-using CommonUtility.Model;
+﻿using CommonUtilities.Model;
+using CommonUtilities.ViewModels;
 
 namespace AuthorApi.Services
 {
     public interface IBookService
     {
-        DigitalBookDBContext DBContext { get; set; }
+        BookDatabaseContext dbContext { get; set; }
 
-        string CreateBook(BookTable bookTable);
+        string CreateBook(AddBook addBook);
         string BlockorUnblockActiveBook(BlockBook blockBook);
-        string UpdateBook(BookTable bookTable);
+        string UpdateBook(EditBook editBook);
     }
 }

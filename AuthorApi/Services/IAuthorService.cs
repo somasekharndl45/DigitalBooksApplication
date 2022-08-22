@@ -1,12 +1,16 @@
-﻿using CommonUtility.DatabaseEntity;
+﻿using CommonUtilities.Model;
+using CommonUtilities.ViewModels;
+using System.Security.Claims;
 
 namespace AuthorApi.Services
 {
     public interface IAuthorService
     {
-        DigitalBookDBContext DBContext { get; set; }
+        BookDatabaseContext dbContext { get; set; }
 
-        string AddAccount(string userName, string password);
-        string ValidateAuthorCred(string userName, string userPassword);
+        string CreateAccount(UserAccount userAccount);
+        string ValidateAuthorCred(string userName, string userPassword, ClaimsIdentity identity);
+
+        //AppAuthorizations appAuthorizations(ClaimsIdentity identity);
     }
 }

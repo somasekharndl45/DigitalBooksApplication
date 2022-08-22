@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CommonUtility.DatabaseEntity
+namespace CommonUtilities.Model
 {
     public partial class Book
     {
@@ -10,7 +10,7 @@ namespace CommonUtility.DatabaseEntity
             Payments = new HashSet<Payment>();
         }
 
-        public long BookId { get; set; }
+        public int BookId { get; set; }
         public byte[]? Logo { get; set; }
         public string Title { get; set; } = null!;
         public string Category { get; set; } = null!;
@@ -23,7 +23,7 @@ namespace CommonUtility.DatabaseEntity
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
 
-        public virtual Author AuthorNameNavigation { get; set; } = null!;
+        public virtual DigitalBooksUser AuthorNameNavigation { get; set; } = null!;
         public virtual ICollection<Payment> Payments { get; set; }
     }
 }

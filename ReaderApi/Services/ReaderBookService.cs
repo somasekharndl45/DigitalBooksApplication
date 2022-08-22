@@ -1,29 +1,35 @@
-﻿using CommonUtility.DatabaseEntity;
-using CommonUtility.Model;
+﻿using CommonUtilities.CommonVariables;
+using CommonUtilities.Model;
+using CommonUtilities.ViewModels;
 using System.Linq;
 
 namespace ReaderApi.Services
 {
     public class ReaderBookService : IReaderBookService
     {
-        public DigitalBookDBContext DBContext { get; set; }
+        public BookDatabaseContext dbContext { get; set; }
 
-        public ReaderBookService(DigitalBookDBContext DigitalBookDBContext)
+        public ReaderBookService(BookDatabaseContext bookDatabaseContext)
         {
-            DBContext = DigitalBookDBContext;
+            dbContext = bookDatabaseContext;
         }
 
-        public List<BookDetails> GetBooks(BookAttributes bookAttributes)
+        /// <summary>
+        /// Search available books
+        /// </summary>
+        /// <param name="bookAttributes">object has search fields to search book</param>
+        /// <returns>list of available books</returns>
+        public List<DisplayBookDetails> GetBooks(SearchBookFields searchBookFields)
         {
-            List<BookDetails> bookList = new List<BookDetails>();
-            if (!string.IsNullOrEmpty(bookAttributes.Author) || !string.IsNullOrEmpty(bookAttributes.Category) || !bookAttributes.Price.Equals(null))
+            List<DisplayBookDetails> bookList = new List<DisplayBookDetails>();
+            if (!string.IsNullOrEmpty(searchBookFields.Author) || !string.IsNullOrEmpty(searchBookFields.Category) || !searchBookFields.Price.Equals(null))
             {
-                var entity = DBContext.Books.Where(b => b.Active == true && (b.AuthorName == bookAttributes.Author
-                    || b.Category == bookAttributes.Category || b.Price <= bookAttributes.Price));
+                var entity = dbContext.Books.Where(b => b.Active == true && (b.AuthorName == searchBookFields.Author
+                    || b.Category == searchBookFields.Category || b.Price <= searchBookFields.Price));
 
                 foreach (var item in entity)
                 {
-                    BookDetails bookDetails = new BookDetails();
+                    DisplayBookDetails bookDetails = new DisplayBookDetails();
                     bookDetails.AuthorName = item.AuthorName;
                     bookDetails.Publisher = item.Publisher;
                     bookDetails.PublishedDate = item.PublishedDate;
@@ -36,11 +42,11 @@ namespace ReaderApi.Services
                 
                 return bookList;
             }
-            var entityAll = DBContext.Books.Where(b => b.Active == true);
+            var entityAll = dbContext.Books.Where(b => b.Active == true);
 
             foreach (var item in entityAll)
             {
-                BookDetails bookDetails = new BookDetails();
+                DisplayBookDetails bookDetails = new DisplayBookDetails();
                 bookDetails.AuthorName = item.AuthorName;
                 bookDetails.Publisher = item.Publisher;
                 bookDetails.PublishedDate = item.PublishedDate;
@@ -70,27 +76,52 @@ namespace ReaderApi.Services
             //return bookList;
         }
 
+        public List<DisplayBookDetails> GetAllBook()
+        {
+            List<DisplayBookDetails> bookList = new List<DisplayBookDetails>();
+            var entityAll = dbContext.Books.Where(b => b.Active == true);
+
+            foreach (var item in entityAll)
+            {
+                DisplayBookDetails bookDetails = new DisplayBookDetails();
+                bookDetails.AuthorName = item.AuthorName;
+                bookDetails.Publisher = item.Publisher;
+                bookDetails.PublishedDate = DateTime.UtcNow;
+                bookDetails.Category = item.Category;
+                bookDetails.Title = item.Title;
+                bookDetails.Price = item.Price;
+                bookDetails.Logo = item.Logo;
+                bookList.Add(bookDetails);
+            }
+            return bookList;
+        }
+
+        /// <summary>
+        /// GEt the book contetnt to read
+        /// </summary>
+        /// <param name="readBook">object has emailid and bookname</param>
+        /// <returns>Book content</returns>
         public string GetContentReadBook(ReadBook readBook)
         {
             try
             {
                 bool isPurchasedBook = false;
                 string content = "";
-                long bookID = DBContext.Books.Where(x => x.Title == readBook.BookName).Select(x => x.BookId).FirstOrDefault();
-                isPurchasedBook = ((DBContext.Payments.Where(x => x.BuyerEmailId == readBook.EmailId && x.BookId == bookID).Count()) > 0) ? true : false;
+                long bookID = dbContext.Books.Where(x => x.Title == readBook.BookName).Select(x => x.BookId).FirstOrDefault();
+                isPurchasedBook = ((dbContext.Payments.Where(x => x.BuyerEmail == readBook.EmailId && x.BookId == bookID).Count()) > 0) ? true : false;
                 if (isPurchasedBook)
                 {
-                    content = DBContext.Books.Where(x => x.BookId == bookID).Select(x => x.Content).FirstOrDefault();
+                    content = dbContext.Books.Where(x => x.BookId == bookID).Select(x => x.Content).FirstOrDefault();
                     return content;
                 }
                 else
                 {
-                    return $"Purchase {readBook.BookName} to read";
+                    return Common.bookNotPurchased;
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return Common.generalError;
             }
         }
     }

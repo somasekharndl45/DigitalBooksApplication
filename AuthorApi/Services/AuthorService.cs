@@ -1,66 +1,88 @@
-﻿using CommonUtility.DatabaseEntity;
+﻿using System.Security.Claims;
+using CommonUtilities.ViewModels;
+using CommonUtilities.Model;
+using CommonUtilities.CommonVariables;
 
 namespace AuthorApi.Services
 {
     public class AuthorService : IAuthorService
     {
-        public DigitalBookDBContext DBContext { get; set; }
+        public BookDatabaseContext dbContext { get; set; }
 
-        public AuthorService(DigitalBookDBContext DigitalBookDBContext)
+        public AuthorService(BookDatabaseContext bookDatabaseContext)
         {
-            DBContext = DigitalBookDBContext;
+            dbContext = bookDatabaseContext;
         }
 
-        public string AddAccount(string userName, string password)
+        /// <summary>
+        /// Used to create user acccount
+        /// </summary>
+        /// <param name="userAccount"> holds user details</param>
+        /// <returns>message on user account creation</returns>
+        public string CreateAccount(UserAccount userAccount)
         {
             try
             {
-                var authorNameList = DBContext.Authors.Select(x => x.AuthorName).ToList();
-                if (!(authorNameList.Contains(userName)))
+                var userItem = dbContext.DigitalBooksUsers.Where(user => user.Email == userAccount.Email);
+                if (userItem.Count() < 1)
                 {
-                    Author author = new Author();
-                    author.AuthorName = userName;
-                    author.AuthorPassword = password;
-                    DBContext.Authors.Add(author);
-                    DBContext.SaveChanges();
-                    return "Author account created Successfully";
+                    DigitalBooksUser bookUser = new DigitalBooksUser();
+                    bookUser.UserName = userAccount.UserName;
+                    bookUser.Email = userAccount.Email;
+                    bookUser.UserPass = userAccount.UserPass;
+                    bookUser.UserRole = userAccount.UserRole;
+                    dbContext.DigitalBooksUsers.Add(bookUser);
+                    dbContext.SaveChanges();
+                    return Common.userAccount;
                 }
                 else
                 {
-                    return "Author Name already exists";
+                    return Common.userAccountExists;
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return Common.userAccountCreationError;
             }
         }
 
-        public string ValidateAuthorCred(string userName, string userPassword)
+        /// <summary>
+        /// Validates the user credentials for login
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userPassword"></param>
+        /// <param name="identity"></param>
+        /// <returns>message on login</returns>
+        public string ValidateAuthorCred(string userName, string userPassword, ClaimsIdentity identity)
         {
             try
             {
-                var authorNameList = DBContext.Authors.Select(x => x.AuthorName).ToList();
-                if (authorNameList.Contains(userName))
+                var authClaimRole = identity.FindFirst("Role").Value;
+                var authRole = dbContext.DigitalBooksUsers.Where(x => x.UserName == userName).Select(x => x.UserRole).FirstOrDefault();
+                if (authRole != null)
                 {
-                    var password = DBContext.Authors.Where(x => x.AuthorName == userName).Select(x => x.AuthorPassword).FirstOrDefault();
-                    if (password == userPassword)
+                    if (authClaimRole == authRole)
                     {
-                        return "User logged in successfully";
+                        var password = dbContext.DigitalBooksUsers.Where(x => x.UserName == userName).Select(x => x.UserPass).FirstOrDefault();
+                        if (password == userPassword)
+                        {
+                            return Common.authorLoginSuccess;
+                        }
+                        else
+                        {
+                            return Common.credentialIncorrect;
+                        }
                     }
                     else
                     {
-                        return "UserName or Password is incorrect. Please try again";
+                        return Common.unathuorized;
                     }
                 }
-                else
-                {
-                    return "Account doesn't exist. Please create account";
-                }
+                return Common.authorNotExists;                
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return Common.authorLoginError;
             }
         }
     }

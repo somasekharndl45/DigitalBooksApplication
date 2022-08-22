@@ -1,6 +1,6 @@
-﻿namespace CommonUtility.Model
+﻿namespace CommonUtilities.ViewModels
 {
-    public class BookDetails
+    public class DisplayBookDetails
     {
         public byte[]? Logo { get; set; }
         public string Title { get; set; } = null!;

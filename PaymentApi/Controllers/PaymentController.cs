@@ -1,4 +1,5 @@
-﻿using CommonUtility.Model;
+﻿using CommonUtilities.CommonVariables;
+using CommonUtilities.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentApi.Services;
@@ -7,7 +8,6 @@ namespace PaymentApi.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    [Authorize]
     public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;
@@ -17,22 +17,33 @@ namespace PaymentApi.Controllers
             _paymentService = paymentService;
         }
 
+
+        /// <summary>
+        /// Make payment to purchase book
+        /// </summary>
+        /// <param name="buyer"></param>
+        /// <returns></returns>
         [HttpPost]
-        public ActionResult PurchaseBook([FromBody] Buyer buyer)
+        public JsonResult PurchaseBook([FromBody] Buyer buyer)
         {
             try
             {
-                string result = _paymentService.BuyBook(buyer);
-                return Ok(result);
+                int result = _paymentService.BuyBook(buyer);
+                return Json(result);
             }
             catch(Exception ex)
             {
-                return Ok(ex.Message);
+                return Json(Common.generalError);
             }
         }
 
+        /// <summary>
+        /// View Invoice with payment id
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <returns>Invoice details</returns>
         [HttpGet]
-        public ActionResult VieworDownloadInvoice([FromBody] long paymentId)
+        public ActionResult VieworDownloadInvoice([FromQuery] int paymentId)
         {
             try
             {
@@ -41,11 +52,16 @@ namespace PaymentApi.Controllers
             }
             catch(Exception ex)
             {
-                return Ok(ex.Message);
+                return NotFound();
             }
             
         }        
 
+        /// <summary>
+        /// View Payment history
+        /// </summary>
+        /// <param name="emailID"></param>
+        /// <returns>payment history</returns>
         [HttpGet]
         public ActionResult ViewPaymentHistory([FromBody] string emailID)
         {
@@ -58,17 +74,22 @@ namespace PaymentApi.Controllers
                 }
                 else
                 {
-                    return Ok("You have not purchased any books");
+                    return Ok(Common.paymentHistory);
                 }
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return Ok(Common.generalError);
             }
         }
 
+        /// <summary>
+        /// Provide refund if applicable
+        /// </summary>
+        /// <param name="paymentId"></param>
+        /// <returns>Refund message</returns>
         [HttpGet]
-        public ActionResult AskForRefund([FromBody] long paymentId)
+        public ActionResult AskForRefund([FromBody] int paymentId)
         {
             try
             {
@@ -77,7 +98,7 @@ namespace PaymentApi.Controllers
             }
             catch(Exception ex)
             {
-                return Ok(ex.Message);
+                return Ok(Common.generalError);
             }           
         }
 

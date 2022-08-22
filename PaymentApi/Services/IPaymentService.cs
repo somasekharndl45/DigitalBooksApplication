@@ -1,15 +1,15 @@
-﻿using CommonUtility.DatabaseEntity;
-using CommonUtility.Model;
+﻿using CommonUtilities.Model;
+using CommonUtilities.ViewModels;
 
 namespace PaymentApi.Services
 {
     public interface IPaymentService
     {
-        DigitalBookDBContext DBContext { get; set; }
+        BookDatabaseContext dbContext { get; set; }
 
-        string BuyBook(Buyer buyer);
-        Invoice GetInvoice(long paymentId);
+        int BuyBook(Buyer buyer);
+        Invoice GetInvoice(int paymentId);
         List<Invoice> GetPaymentHistory(string emailID);
-        string GetRefund(long paymentId);
+        string GetRefund(int paymentId);
     }
 }

@@ -1,10 +1,7 @@
-﻿using CommonUtility.DatabaseEntity;
-using CommonUtility.Model;
+﻿using CommonUtilities.CommonVariables;
+using CommonUtilities.Model;
+using CommonUtilities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using WebApiAuthentication.Services;
 
 namespace WebApiAuthentication.Controllers
@@ -14,55 +11,69 @@ namespace WebApiAuthentication.Controllers
     public class AuthenticationController : Controller
     {
         private readonly IConfiguration _configuration;
-        private DigitalBookDBContext DBContext { get; set; }
+        private BookDatabaseContext dbContext { get; set; }
 
         private readonly ITokenService _tokenService;
 
-        public AuthenticationController(IConfiguration configuration, DigitalBookDBContext DigitalBookDBContext, ITokenService tokenService)
+        public AuthenticationController(IConfiguration configuration, BookDatabaseContext bookDatabaseContext, ITokenService tokenService)
         {
             this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            DBContext = DigitalBookDBContext;
+            dbContext = bookDatabaseContext;
             _tokenService = tokenService;
         }
 
+        /// <summary>
+        /// Authenticates the user after validating the user credentials
+        /// </summary>
+        /// <param name="userCredential">The userCredential object holds user name and password</param>
+        /// <returns>action result</returns>
         [HttpPost]
-        public ActionResult<string> Authenticate(UserCredential userCredential)
+        public JsonResult Authenticate(UserCredential userCredential)
         {
             try
             {
-                if (ValidateUserCredentials(userCredential.UserName, userCredential.Password))
-                {
-                    var token = _tokenService.BuildToken(_configuration["Jwt:Key"],
-                        _configuration["Jwt:Issuer"],
-                        new[]
+                IEnumerable<string> audience = new[]
                         {
                         _configuration["Jwt:ApiGatewayAudience"],
                         _configuration["Jwt:ReaderAudience"],
                         _configuration["Jwt:PaymentAudience"],
                         _configuration["Jwt:AuthorAudience"]
-                        },
-                        userCredential.Password);
-                    return Ok(new
+                        };
+                bool isValidUser = ValidateUserCredentials(userCredential.UserName, userCredential.Password);
+                if (isValidUser)
+                {
+                    var token = _tokenService.BuildToken(_configuration["Jwt:Key"],
+                        _configuration["Jwt:Issuer"],
+                        audience,
+                        userCredential.UserName);
+                    string userRole = dbContext.DigitalBooksUsers.Where(user => user.UserName == userCredential.UserName).Select(user => user.UserRole).FirstOrDefault();
+                    return Json(new
                     {
                         Token = token,
-                        IsAuthenticated = true
+                        Role = userRole
                     });
                 }
-                return Ok(new
+                return Json(new
                 {
                     Token = string.Empty,
-                    IsAuthenticated = false
+                    Role = false
                 });
             }
             catch(Exception ex)
             {
-                return Ok(ex.Message);
+                return Json(Common.tokenError);
             }
         }
 
+        /// <summary>
+        /// Validates the user credentials by retrieving data from database with username and password
+        /// </summary>
+        /// <param name="userName">The unique userName</param>
+        /// <param name="password">Password</param>
+        /// <returns>True or False based on the credential</returns>
         private bool ValidateUserCredentials(string userName, string password)
         {
-            bool isValidUser = !(DBContext.Authors.Where(u => u.AuthorName == userName && u.AuthorPassword == password).FirstOrDefault() is null) ? true : false;
+            bool isValidUser = !(dbContext.DigitalBooksUsers.Where(u => u.UserName == userName && u.UserPass == password).FirstOrDefault() is null) ? true : false;
             return isValidUser;
         }
     }

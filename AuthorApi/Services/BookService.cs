@@ -1,88 +1,104 @@
-﻿using CommonUtility.DatabaseEntity;
-using CommonUtility.Model;
+﻿using CommonUtilities.Model;
+using CommonUtilities.ViewModels;
+using CommonUtilities.CommonVariables;
 using System.Linq;
 
 namespace AuthorApi.Services
 {
     public class BookService : IBookService
     {
-        public DigitalBookDBContext DBContext { get; set; }
+        public BookDatabaseContext dbContext { get; set; }
 
-        public BookService(DigitalBookDBContext digitalBookDBContext)
+        public BookService(BookDatabaseContext bookDatabaseContext)
         {
-            DBContext = digitalBookDBContext;
+            dbContext = bookDatabaseContext;
         }
 
-        public string CreateBook(BookTable bookTable)
+        /// <summary>
+        /// Method to create new book
+        /// </summary>
+        /// <param name="addBook">object has book details</param>
+        /// <returns>message on book creation</returns>
+        public string CreateBook(AddBook addBook)
         {
             try
             {
-                if(!(DBContext.Authors.Where(x => x.AuthorName == bookTable.AuthorName).First() is null))
+                if (!(dbContext.DigitalBooksUsers.Where(x => x.UserName == addBook.AuthorName).First() is null))
                 {
                     Book bookEntity = new Book();
-                    bookEntity.Logo = bookTable.Logo;
-                    bookEntity.Title = bookTable.Title;
-                    bookEntity.Category = bookTable.Category;
-                    bookEntity.Price = bookTable.Price;
-                    bookEntity.AuthorName = bookTable.AuthorName;
-                    bookEntity.Publisher = bookTable.Publisher;
-                    bookEntity.PublishedDate = bookTable.PublishedDate;
+                    bookEntity.Logo = addBook.Logo;
+                    bookEntity.Title = addBook.Title;
+                    bookEntity.Category = addBook.Category;
+                    bookEntity.Price = addBook.Price;
+                    bookEntity.AuthorName = addBook.AuthorName;
+                    bookEntity.Publisher = addBook.Publisher;
+                    bookEntity.PublishedDate = DateTime.UtcNow;
                     bookEntity.CreatedDate = DateTime.Now;
                     bookEntity.ModifiedDate = DateTime.Now;
-                    bookEntity.Active = bookTable.Active;
-                    bookEntity.Content = bookTable.Content;
+                    bookEntity.Active = addBook.Active;
+                    bookEntity.Content = addBook.Content;
 
 
-                    DBContext.Books.Add(bookEntity);
-                    DBContext.SaveChanges();
-                    return "Book added successfully";
-                }
-                else 
-                {
-                    return "Author name doesn't exist";
-                }                
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
-
-        public string UpdateBook(BookTable bookTable)
-        {
-            try
-            {
-                var bookToUpdate = DBContext.Books.FirstOrDefault(x => x.BookId == bookTable.BookId);
-                if (bookToUpdate != null)
-                {
-                    bookToUpdate.Title = bookTable.Title;
-                    bookToUpdate.ModifiedDate = DateTime.Now;
-                    bookToUpdate.Publisher = bookTable.Publisher;
-                    if (!string.IsNullOrEmpty(bookTable.Content))
-                    {
-                        bookToUpdate.Content = bookTable.Content;
-                    }
-                    DBContext.SaveChanges();
-                    return $"Updated book id: {bookTable.BookId} Successfully";
+                    dbContext.Books.Add(bookEntity);
+                    dbContext.SaveChanges();
+                    return Common.bookAddedMsg;
                 }
                 else
                 {
-                    return $"Book Id : {bookTable.BookId} doesn't exist ";
+                    return Common.bookNotAddedMsg;
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return Common.generalError;
             }
         }
 
+        /// <summary>
+        /// Modify book attributes
+        /// </summary>
+        /// <param name="editBook">has value to be modified</param>
+        /// <returns>Message on modify book</returns>
+        public string UpdateBook(EditBook editBook)
+        {
+            try
+            {
+                var bookToUpdate = dbContext.Books.FirstOrDefault(x => x.BookId == editBook.BookId);
+                if (bookToUpdate != null)
+                {
+                    bookToUpdate.Title = editBook.Title;
+                    bookToUpdate.ModifiedDate = DateTime.Now;
+                    bookToUpdate.Publisher = editBook.Publisher;
+                    if (!string.IsNullOrEmpty(editBook.Content))
+                    {
+                        bookToUpdate.Content = editBook.Content;
+                    }
+                    dbContext.SaveChanges();
+                    return Common.editbookMsg;
+                }
+                else
+                {
+                    return Common.bookNotFound;
+                }
+            }
+            catch (Exception ex)
+            {
+                return Common.editbookErrorMsg;
+            }
+        }
+
+        /// <summary>
+        /// Block book
+        /// </summary>
+        /// <param name="blockBook">Object has params to block book</param>
+        /// <returns>message on block / unblock</returns>
         public string BlockorUnblockActiveBook(BlockBook blockBook)
         {
-            var book = DBContext.Books.Where(x => x.Title == blockBook.BookName && x.AuthorName == blockBook.AuthorName).FirstOrDefault();
-            if(book != null)
+            var book = dbContext.Books.Where(x => x.Title == blockBook.BookName && x.AuthorName == blockBook.AuthorName).FirstOrDefault();
+            if (book != null)
             {
-                var entity = DBContext.Books.Where(b => b.Title == blockBook.BookName).FirstOrDefault();
-                if(blockBook.Block)
+                var entity = dbContext.Books.Where(b => b.Title == blockBook.BookName).FirstOrDefault();
+                if (blockBook.Block)
                 {
                     entity.Active = false;
                 }
@@ -90,18 +106,18 @@ namespace AuthorApi.Services
                 {
                     entity.Active = true;
                 }
-                DBContext.Books.Update(entity);
-                DBContext.SaveChanges();
-                if(blockBook.Block)
+                dbContext.Books.Update(entity);
+                dbContext.SaveChanges();
+                if (blockBook.Block)
                 {
-                    return $"Book {blockBook.BookName} blocked successfully";
+                    return Common.blockbookMsg;
                 }
                 else
                 {
-                    return $"Book {blockBook.BookName} unblocked successfully";
+                    return Common.unblockbookMsg;
                 }
             }
-            return "Book doesn't exist. Try again with other book names";
+            return Common.bookNotFound;
         }
     }
 }

@@ -1,37 +1,40 @@
-﻿using CommonUtility.DatabaseEntity;
-using System.Linq;
+﻿using CommonUtilities.Model;
 
 namespace AuthorApi.Services
 {
     public class NotificationService : INotificationService
     {
-        public DigitalBookDBContext DBContext { get; set; }
+        public BookDatabaseContext dbContext { get; set; }
 
-        public NotificationService(DigitalBookDBContext digitalBookDBContext)
+        public NotificationService(BookDatabaseContext bookDatabaseContext)
         {
-            DBContext = digitalBookDBContext;
+            dbContext = bookDatabaseContext;
         }
 
-        public List<string>? sendNotification()
-        {
-            var inactiveIds = DBContext.Books.Where(b => b.Active == false).Select(s => s.BookId).ToList();
+        /// <summary>
+        /// Send Notification to reader if the book is blocked
+        /// </summary>
+        /// <returns></returns>
+        //public List<string>? sendNotification()
+        //{
+        //    var inactiveIds = dbContext.Books.Where(b => b.Active == false).Select(s => s.BookId).ToList();
 
-            if (inactiveIds.Count > 0)
-            {
-                var inactivebooks = DBContext.Books.Where(b => b.Active == false).Select(s => s.Title).ToList();
-                return inactivebooks;
-                //var paymentDetails = DBContext.Payments.ToList();
-                //List<string> usersList = new List<string>();
+        //    if (inactiveIds.Count > 0)
+        //    {
+        //        var inactivebooks = dbContext.Books.Where(b => b.Active == false).Select(s => s.Title).ToList();
+        //        return inactivebooks;
+        //        //var paymentDetails = DBContext.Payments.ToList();
+        //        //List<string> usersList = new List<string>();
 
-                //foreach (var item in paymentDetails)
-                //{
-                //    if (inactiveIds.Contains(Convert.ToInt64(item.BookId)))
-                //    {
+        //        //foreach (var item in paymentDetails)
+        //        //{
+        //        //    if (inactiveIds.Contains(Convert.ToInt64(item.BookId)))
+        //        //    {
 
-                //    }
-                //}
-            }
-            return null;
-        }
+        //        //    }
+        //        //}
+        //    }
+        //    return null;
+        //}
     }
 }

@@ -1,11 +1,9 @@
-﻿namespace CommonUtility.Model
+﻿namespace CommonUtilities.ViewModels
 {
-    public class BookAttributes
+    public class SearchBookFields
     {
         public string? Category { get; set; }
-
         public string? Author { get; set; }
-
         public decimal? Price { get; set; }
     }
 }
