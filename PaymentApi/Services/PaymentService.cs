@@ -1,29 +1,25 @@
 ﻿using CommonUtilities.CommonVariables;
 using CommonUtilities.Model;
-using CommonUtilities.ViewModels;
+using CommonUtilities.DataEntity;
 
 namespace PaymentApi.Services
 {
     public class PaymentService : IPaymentService
     {
-        public BookDatabaseContext dbContext { get; set; }
+        public DigitalBookDatabaseContext dbContext { get; set; }
 
-        public PaymentService(BookDatabaseContext bookDatabaseContext)
+        public PaymentService(DigitalBookDatabaseContext bookDatabaseContext)
         {
             dbContext = bookDatabaseContext;
         }
 
-        /// <summary>
-        /// Make payment to buy
-        /// </summary>
-        /// <param name="buyer">Object has Buyer(reader) details</param>
-        /// <returns></returns>
-        public int BuyBook(Buyer buyer)
+       
+        public int BuyBook(BuyerDetails buyerDetails)
         {
-                int bookId = dbContext.Books.Where(book => book.Title == buyer.BookName).Select(book => book.BookId).FirstOrDefault();                 
-                Payment paymentEntity = new Payment();
-                paymentEntity.BuyerName = buyer.BuyerName;
-                paymentEntity.BuyerEmail = buyer.EmailId;
+                int bookId = dbContext.Books.Where(book => book.Title == buyerDetails.BookName).Select(book => book.BookId).FirstOrDefault();                 
+               CommonUtilities.DataEntity.Payment paymentEntity = new CommonUtilities.DataEntity.Payment();
+                paymentEntity.BuyerName = buyerDetails.BuyerName;
+                paymentEntity.BuyerEmail = buyerDetails.EmailId;
                 paymentEntity.BookId = bookId;
                 paymentEntity.PaymentDate = DateTime.Now;
                 dbContext.Payments.Add(paymentEntity);
@@ -32,11 +28,7 @@ namespace PaymentApi.Services
                 return paymentId;
         }
 
-        /// <summary>
-        /// Get Invoice
-        /// </summary>
-        /// <param name="paymentId"></param>
-        /// <returns>Invoice</returns>
+      
         public Invoice GetInvoice(int paymentId)
         {
             Payment paymentEntity = new Payment();
@@ -51,11 +43,7 @@ namespace PaymentApi.Services
             return invoice;
         }
 
-        /// <summary>
-        /// Get payment hostory
-        /// </summary>
-        /// <param name="emailID">email id</param>
-        /// <returns>payment history details</returns>
+       
         public List<Invoice> GetPaymentHistory(string emailID)
         {
             List<Payment> paymentEntityList = new List<Payment>();
@@ -78,11 +66,7 @@ namespace PaymentApi.Services
             return paymenthistoryList;
         }
 
-        /// <summary>
-        /// Get refund
-        /// </summary>
-        /// <param name="paymentId"></param>
-        /// <returns>Message on refund</returns>
+       
         public string GetRefund(int paymentId)
         {
             DateTime paymentDate = dbContext.Payments.Where(x => x.PaymentId == paymentId).Select(x => x.PaymentDate).FirstOrDefault();

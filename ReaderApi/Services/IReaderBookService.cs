@@ -1,14 +1,13 @@
 ﻿using CommonUtilities.Model;
-using CommonUtilities.ViewModels;
-
+using CommonUtilities.DataEntity;
 namespace ReaderApi.Services
 {
     public interface IReaderBookService
     {
-        BookDatabaseContext dbContext { get; set; }
+        DigitalBookDatabaseContext dbContext { get; set; }
 
-        List<DisplayBookDetails> GetAllBook();
-        List<DisplayBookDetails> GetBooks(SearchBookFields searchBookFields);
-        string GetContentReadBook(ReadBook readBook);
+        List<BookInformation> GetAllBook();
+        List<BookInformation> GetBooks(BookProperties searchBookFields);
+        string GetContentReadBook(BookRead readBook);
     }
 }

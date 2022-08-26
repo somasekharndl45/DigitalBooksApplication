@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CommonUtilities.Model
+namespace CommonUtilities.DataEntity
 {
-    public partial class DigitalBooksUser
+    public partial class Userdetail
     {
-        public DigitalBooksUser()
+        public Userdetail()
         {
             Books = new HashSet<Book>();
         }

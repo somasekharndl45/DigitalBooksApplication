@@ -1,6 +1,4 @@
 {
-  //https://localhost:7224/Authentication
-
   "Routes": [
     {
       "DownstreamPathTemplate": "/Authentication",
@@ -22,7 +20,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7125
+          "Port": 7272
         }
       ],
       "UpstreamPathTemplate": "/api/Books", //From api gateway
@@ -35,10 +33,23 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7125
+          "Port": 7272
         }
       ],
       "UpstreamPathTemplate": "/api/ReadBook", //From api gateway
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Reader/DisplayBooks",
+      "DownstreamScheme": "https",
+      "DownstreamHttopMethod": "GET",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7272
+        }
+      ],
+      "UpstreamPathTemplate": "/api/DisplayBook", //From api gateway
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -48,23 +59,23 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7285
+          "Port": 7049
         }
       ],
-      "UpstreamPathTemplate": "/api/BuyBook", //From api gateway
+      "UpstreamPathTemplate": "/api/PurchaseBook", //From api gateway
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/Payment/VieworDownloadInvoice",
+      "DownstreamPathTemplate": "/Payment/VieworDownloadBill",
       "DownstreamScheme": "https",
       "DownstreamHttopMethod": "GET",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7285
+          "Port": 7049
         }
       ],
-      "UpstreamPathTemplate": "/api/ViewInvoice", //From api gateway
+      "UpstreamPathTemplate": "/api/ViewBill", //From api gateway
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
@@ -74,20 +85,20 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7285
+          "Port": 7049
         }
       ],
       "UpstreamPathTemplate": "/api/ViewPaymentHistory", //From api gateway
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/Payment/AskForRefund",
+      "DownstreamPathTemplate": "/Payment/Refund",
       "DownstreamScheme": "https",
       "DownstreamHttopMethod": "GET",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7285
+          "Port": 7049
         }
       ],
       "UpstreamPathTemplate": "/api/Refund", //From api gateway
@@ -100,10 +111,10 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7011
+          "Port": 7041
         }
       ],
-      "UpstreamPathTemplate": "/api/NewAccount", //From api gateway
+      "UpstreamPathTemplate": "/api/CreateAccount", //From api gateway
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -113,7 +124,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7011
+          "Port": 7041
         }
       ],
       "UpstreamPathTemplate": "/api/Login", //From api gateway
@@ -126,7 +137,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7011
+          "Port": 7041
         }
       ],
       "UpstreamPathTemplate": "/api/CreateBook", //From api gateway
@@ -139,7 +150,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7011
+          "Port": 7041
         }
       ],
       "UpstreamPathTemplate": "/api/EditBook", //From api gateway
@@ -152,7 +163,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7011
+          "Port": 7041
         }
       ],
       "UpstreamPathTemplate": "/api/BlockorUnblockBook", //From api gateway
@@ -165,7 +176,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7011
+          "Port": 7041
         }
       ],
       "UpstreamPathTemplate": "/api/NotifyReader", //From api gateway
@@ -173,6 +184,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7109"
+    "BaseUrl": "https://localhost:7093"
   }
 }
+

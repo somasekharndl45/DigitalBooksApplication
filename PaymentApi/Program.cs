@@ -2,6 +2,7 @@ using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using CommonUtilities.DataEntity;
 using PaymentApi.Services;
 using System.Text;
 
@@ -16,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddDbContext<BookDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+builder.Services.AddDbContext<DigitalBookDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(option =>

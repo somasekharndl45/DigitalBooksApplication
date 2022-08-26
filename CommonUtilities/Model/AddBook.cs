@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.ViewModels
+﻿namespace CommonUtilities.Model
 {
     public class AddBook
     {

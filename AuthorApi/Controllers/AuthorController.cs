@@ -1,6 +1,6 @@
 ﻿using AuthorApi.Services;
 using CommonUtilities.CommonVariables;
-using CommonUtilities.ViewModels;
+using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -27,13 +27,8 @@ namespace AuthorApi.Controllers
             
         }
 
-        /// <summary>
-        /// Used to create user account for both reader and author
-        /// </summary>
-        /// <param name="userAccount">object holds user related data</param>
-        /// <returns>Message upon successful creation on user account</returns>
         [HttpPost]
-        public JsonResult CreateUserAccount([FromBody] UserAccount userAccount)
+        public JsonResult CreateAccount([FromBody] UserAccount userAccount)
         {
             try
             {
@@ -46,13 +41,8 @@ namespace AuthorApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Author login authorization
-        /// </summary>
-        /// <param name="userCredential"></param>
-        /// <returns></returns>
         [HttpGet]
-        public ActionResult AuthorLogin([FromBody] UserCredential userCredential)
+        public ActionResult Login([FromBody] UserCredentials userCredential)
         {
             try
             {
@@ -69,12 +59,6 @@ namespace AuthorApi.Controllers
                 return BadRequest();
             }
         }
-
-        /// <summary>
-        /// Post Method to create new book
-        /// </summary>
-        /// <param name="addBook">Object has book details</param>
-        /// <returns>message on book creation</returns>
         [HttpPost]
         public JsonResult CreateBook([FromBody] AddBook addBook)
         {
@@ -88,14 +72,8 @@ namespace AuthorApi.Controllers
                 return Json(Common.bookAddedMsg);
             }
         }
-
-        /// <summary>
-        /// To edit the book
-        /// </summary>
-        /// <param name="editBook">object with edit details of book</param>
-        /// <returns>Message on edit book</returns>
         [HttpPut]
-        public ActionResult EditBook([FromBody] EditBook editBook)
+        public ActionResult EditBook([FromBody] BookTable editBook)
         {
             try
             {
@@ -108,11 +86,7 @@ namespace AuthorApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Block or Unblock book
-        /// </summary>
-        /// <param name="blockBook">Object has data to unblock or block book</param>
-        /// <returns>message on block/ unblock book</returns>
+       
         [HttpPut]
         public ActionResult BlockorUnlockBook([FromBody] BlockBook blockBook)
         {
@@ -126,24 +100,5 @@ namespace AuthorApi.Controllers
                 return Ok(ex);
             }
         }
-
-        /// <summary>
-        /// Send Notification to reader if the book is blocked
-        /// </summary>
-        /// <returns></returns>
-        //[HttpGet]
-        //public ActionResult NotifyReader()
-        //{
-        //    try
-        //    {
-        //        var result = _notificationService.sendNotification();
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Ok(ex.Message);
-        //    }
-        //}
-
     }
 }

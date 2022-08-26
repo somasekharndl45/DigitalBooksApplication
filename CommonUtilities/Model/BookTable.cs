@@ -1,6 +1,6 @@
-﻿namespace CommonUtilities.ViewModels
+﻿namespace CommonUtilities.Model
 {
-    public class EditBook
+    public class BookTable
     {
         public long BookId { get; set; }
         public byte[]? Logo { get; set; }

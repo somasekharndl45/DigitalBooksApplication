@@ -10,14 +10,7 @@ namespace WebApiAuthentication.Services
     {
         private TimeSpan ExpiryDuration = new TimeSpan(20, 30, 0);
 
-        /// <summary>
-        /// Generates the bearer token for authentication
-        /// </summary>
-        /// <param name="key">The unique key</param>
-        /// <param name="issuer">The issuer</param>
-        /// <param name="audience">The audience collection</param>
-        /// <param name="userName">The unique username</param>
-        /// <returns>Bearer token holding specified key and username</returns>
+       
         public string BuildToken(string key, string issuer, IEnumerable<string> audience, string userName)
         {
             try

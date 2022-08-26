@@ -3,31 +3,31 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace CommonUtilities.Model
+namespace CommonUtilities.DataEntity
 {
-    public partial class BookDatabaseContext : DbContext
+    public partial class DigitalBookDatabaseContext : DbContext
     {
-        public BookDatabaseContext()
+        public DigitalBookDatabaseContext()
         {
         }
 
-        public BookDatabaseContext(DbContextOptions<BookDatabaseContext> options)
+        public DigitalBookDatabaseContext(DbContextOptions<DigitalBookDatabaseContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Book> Books { get; set; } = null!;
-        public virtual DbSet<DigitalBooksUser> DigitalBooksUsers { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
+        public virtual DbSet<Userdetail> Userdetails { get; set; } = null!;
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Data Source=CTSDOTNET648;Initial Catalog=BookDatabase;User ID=sa;Password=pass@word1");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=CTSDOTNET668;Initial Catalog=DigitalBookDatabase;User ID=sa;Password=pass@word1");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,7 @@ namespace CommonUtilities.Model
             {
                 entity.ToTable("Book");
 
-                entity.HasIndex(e => e.Title, "UQ__Book__2CB664DC42E4DA43")
+                entity.HasIndex(e => e.Title, "UQ__Book__2CB664DCD44DD6EC")
                     .IsUnique();
 
                 entity.Property(e => e.BookId).HasColumnName("BookID");
@@ -71,39 +71,7 @@ namespace CommonUtilities.Model
                     .HasPrincipalKey(p => p.UserName)
                     .HasForeignKey(d => d.AuthorName)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Book__AuthorName__29572725");
-            });
-
-            modelBuilder.Entity<DigitalBooksUser>(entity =>
-            {
-                entity.HasKey(e => e.UserId)
-                    .HasName("PK__DigitalB__1788CCAC19673AE8");
-
-                entity.ToTable("DigitalBooksUser");
-
-                entity.HasIndex(e => e.Email, "UQ__DigitalB__A9D1053422432213")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.UserName, "UQ__DigitalB__C9F284565B53F98F")
-                    .IsUnique();
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.Property(e => e.Email)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UserName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UserPass)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UserRole)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .HasConstraintName("FK__Book__AuthorName__49C3F6B7");
             });
 
             modelBuilder.Entity<Payment>(entity =>
@@ -128,7 +96,39 @@ namespace CommonUtilities.Model
                     .WithMany(p => p.Payments)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Payment__BookID__36B12243");
+                    .HasConstraintName("FK__Payment__BookID__4F7CD00D");
+            });
+
+            modelBuilder.Entity<Userdetail>(entity =>
+            {
+                entity.HasKey(e => e.UserId)
+                    .HasName("PK__Userdeta__1788CCACA94F450E");
+
+                entity.ToTable("Userdetail");
+
+                entity.HasIndex(e => e.Email, "UQ__Userdeta__A9D105348A7208BC")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.UserName, "UQ__Userdeta__C9F284567DCA7FA6")
+                    .IsUnique();
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserPass)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserRole)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

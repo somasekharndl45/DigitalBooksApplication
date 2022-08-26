@@ -1,6 +1,7 @@
-﻿namespace CommonUtilities.ViewModels
+﻿namespace CommonUtilities.Model
+
 {
-    public class SearchBookFields
+    public class BookProperties
     {
         public string? Category { get; set; }
         public string? Author { get; set; }

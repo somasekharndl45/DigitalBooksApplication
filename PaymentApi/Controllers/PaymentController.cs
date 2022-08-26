@@ -1,5 +1,5 @@
 ﻿using CommonUtilities.CommonVariables;
-using CommonUtilities.ViewModels;
+using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentApi.Services;
@@ -18,17 +18,12 @@ namespace PaymentApi.Controllers
         }
 
 
-        /// <summary>
-        /// Make payment to purchase book
-        /// </summary>
-        /// <param name="buyer"></param>
-        /// <returns></returns>
         [HttpPost]
-        public JsonResult PurchaseBook([FromBody] Buyer buyer)
+        public JsonResult PurchaseBook([FromBody] BuyerDetails buyerDetails)
         {
             try
             {
-                int result = _paymentService.BuyBook(buyer);
+                int result = _paymentService.BuyBook(buyerDetails);
                 return Json(result);
             }
             catch(Exception ex)
@@ -37,13 +32,9 @@ namespace PaymentApi.Controllers
             }
         }
 
-        /// <summary>
-        /// View Invoice with payment id
-        /// </summary>
-        /// <param name="paymentId"></param>
-        /// <returns>Invoice details</returns>
+       
         [HttpGet]
-        public ActionResult VieworDownloadInvoice([FromQuery] int paymentId)
+        public ActionResult VieworDownloadBill([FromQuery] int paymentId)
         {
             try
             {
@@ -57,11 +48,7 @@ namespace PaymentApi.Controllers
             
         }        
 
-        /// <summary>
-        /// View Payment history
-        /// </summary>
-        /// <param name="emailID"></param>
-        /// <returns>payment history</returns>
+      
         [HttpGet]
         public ActionResult ViewPaymentHistory([FromBody] string emailID)
         {
@@ -83,13 +70,8 @@ namespace PaymentApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Provide refund if applicable
-        /// </summary>
-        /// <param name="paymentId"></param>
-        /// <returns>Refund message</returns>
         [HttpGet]
-        public ActionResult AskForRefund([FromBody] int paymentId)
+        public ActionResult Refund([FromBody] int paymentId)
         {
             try
             {

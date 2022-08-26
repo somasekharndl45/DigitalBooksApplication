@@ -1,27 +1,20 @@
 ﻿using CommonUtilities.CommonVariables;
 using CommonUtilities.Model;
-using CommonUtilities.ViewModels;
-using System.Linq;
+using CommonUtilities.DataEntity;
 
 namespace ReaderApi.Services
 {
     public class ReaderBookService : IReaderBookService
     {
-        public BookDatabaseContext dbContext { get; set; }
+        public DigitalBookDatabaseContext dbContext { get; set; }
 
-        public ReaderBookService(BookDatabaseContext bookDatabaseContext)
+        public ReaderBookService(DigitalBookDatabaseContext bookDatabaseContext)
         {
             dbContext = bookDatabaseContext;
         }
-
-        /// <summary>
-        /// Search available books
-        /// </summary>
-        /// <param name="bookAttributes">object has search fields to search book</param>
-        /// <returns>list of available books</returns>
-        public List<DisplayBookDetails> GetBooks(SearchBookFields searchBookFields)
+        public List<BookInformation> GetBooks(BookProperties searchBookFields)
         {
-            List<DisplayBookDetails> bookList = new List<DisplayBookDetails>();
+            List<BookInformation> bookList = new List<BookInformation>();
             if (!string.IsNullOrEmpty(searchBookFields.Author) || !string.IsNullOrEmpty(searchBookFields.Category) || !searchBookFields.Price.Equals(null))
             {
                 var entity = dbContext.Books.Where(b => b.Active == true && (b.AuthorName == searchBookFields.Author
@@ -29,7 +22,7 @@ namespace ReaderApi.Services
 
                 foreach (var item in entity)
                 {
-                    DisplayBookDetails bookDetails = new DisplayBookDetails();
+                    BookInformation bookDetails = new BookInformation();
                     bookDetails.AuthorName = item.AuthorName;
                     bookDetails.Publisher = item.Publisher;
                     bookDetails.PublishedDate = item.PublishedDate;
@@ -46,7 +39,7 @@ namespace ReaderApi.Services
 
             foreach (var item in entityAll)
             {
-                DisplayBookDetails bookDetails = new DisplayBookDetails();
+                BookInformation bookDetails = new BookInformation();
                 bookDetails.AuthorName = item.AuthorName;
                 bookDetails.Publisher = item.Publisher;
                 bookDetails.PublishedDate = item.PublishedDate;
@@ -58,32 +51,16 @@ namespace ReaderApi.Services
             }
             return bookList;
 
-            //if(bookAttributes.Category  == null && bookAttributes.Author == null && bookAttributes.Price == null)
-            //{
-            //    bookList = DBContext.Books.Select(s => s.Title).ToList();
-            //    return bookList;
-            //}
-            //else if(bookAttributes.Category != null && bookAttributes.Author != null && bookAttributes.Price != null)
-            //{
-            //    bookList = DBContext.Books.Where(s => s.Category == bookAttributes.Category
-            //    && s.AuthorName == bookAttributes.Author && s.Price == bookAttributes.Price)
-            //    .Select(s => s.Title).ToList();
-            //    return bookList;
-            //}
-            //bookList = DBContext.Books.Where(s => s.Category == bookAttributes.Category 
-            //    && s.AuthorName == bookAttributes.Author && s.Price == bookAttributes.Price)
-            //    .Select(s => s.Title).ToList();
-            //return bookList;
         }
 
-        public List<DisplayBookDetails> GetAllBook()
+        public List<BookInformation> GetAllBook()
         {
-            List<DisplayBookDetails> bookList = new List<DisplayBookDetails>();
+            List<BookInformation> bookList = new List<BookInformation>();
             var entityAll = dbContext.Books.Where(b => b.Active == true);
 
             foreach (var item in entityAll)
             {
-                DisplayBookDetails bookDetails = new DisplayBookDetails();
+                BookInformation bookDetails = new BookInformation();
                 bookDetails.AuthorName = item.AuthorName;
                 bookDetails.Publisher = item.Publisher;
                 bookDetails.PublishedDate = DateTime.UtcNow;
@@ -96,12 +73,8 @@ namespace ReaderApi.Services
             return bookList;
         }
 
-        /// <summary>
-        /// GEt the book contetnt to read
-        /// </summary>
-        /// <param name="readBook">object has emailid and bookname</param>
-        /// <returns>Book content</returns>
-        public string GetContentReadBook(ReadBook readBook)
+      
+        public string GetContentReadBook(BookRead readBook)
         {
             try
             {

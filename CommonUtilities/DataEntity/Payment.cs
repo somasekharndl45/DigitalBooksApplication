@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CommonUtilities.Model
+namespace CommonUtilities.DataEntity
 {
     public partial class Payment
     {

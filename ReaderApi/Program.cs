@@ -2,6 +2,7 @@ using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using CommonUtilities.DataEntity;
 using ReaderApi.Services;
 using System.Text;
 
@@ -14,7 +15,7 @@ builder.Services.AddTransient<IReaderBookService, ReaderBookService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<BookDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+builder.Services.AddDbContext<DigitalBookDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(option =>

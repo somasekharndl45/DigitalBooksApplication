@@ -2,6 +2,7 @@ using AuthorApi.Services;
 using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using CommonUtilities.DataEntity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -18,7 +19,7 @@ builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<BookDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+builder.Services.AddDbContext<DigitalBookDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("connection")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(option =>

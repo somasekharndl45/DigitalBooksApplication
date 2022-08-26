@@ -2,6 +2,7 @@ using CommonUtilities.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CommonUtilities.DataEntity;
 using WebApiAuthentication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ITokenService, TokenService>();
-builder.Services.AddDbContext<BookDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+builder.Services.AddDbContext<DigitalBookDatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
 {

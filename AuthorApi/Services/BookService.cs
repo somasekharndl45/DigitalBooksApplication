@@ -1,29 +1,24 @@
 ﻿using CommonUtilities.Model;
-using CommonUtilities.ViewModels;
 using CommonUtilities.CommonVariables;
-using System.Linq;
+using CommonUtilities.DataEntity;
 
 namespace AuthorApi.Services
 {
     public class BookService : IBookService
     {
-        public BookDatabaseContext dbContext { get; set; }
+        public DigitalBookDatabaseContext dbContext { get; set; }
 
-        public BookService(BookDatabaseContext bookDatabaseContext)
+        public BookService(DigitalBookDatabaseContext bookDatabaseContext)
         {
             dbContext = bookDatabaseContext;
         }
 
-        /// <summary>
-        /// Method to create new book
-        /// </summary>
-        /// <param name="addBook">object has book details</param>
-        /// <returns>message on book creation</returns>
+      
         public string CreateBook(AddBook addBook)
         {
             try
             {
-                if (!(dbContext.DigitalBooksUsers.Where(x => x.UserName == addBook.AuthorName).First() is null))
+                if (!(dbContext.Userdetails.Where(x => x.UserName == addBook.AuthorName).First() is null))
                 {
                     Book bookEntity = new Book();
                     bookEntity.Logo = addBook.Logo;
@@ -54,12 +49,8 @@ namespace AuthorApi.Services
             }
         }
 
-        /// <summary>
-        /// Modify book attributes
-        /// </summary>
-        /// <param name="editBook">has value to be modified</param>
-        /// <returns>Message on modify book</returns>
-        public string UpdateBook(EditBook editBook)
+     
+        public string UpdateBook(BookTable editBook)
         {
             try
             {
@@ -87,11 +78,7 @@ namespace AuthorApi.Services
             }
         }
 
-        /// <summary>
-        /// Block book
-        /// </summary>
-        /// <param name="blockBook">Object has params to block book</param>
-        /// <returns>message on block / unblock</returns>
+       
         public string BlockorUnblockActiveBook(BlockBook blockBook)
         {
             var book = dbContext.Books.Where(x => x.Title == blockBook.BookName && x.AuthorName == blockBook.AuthorName).FirstOrDefault();

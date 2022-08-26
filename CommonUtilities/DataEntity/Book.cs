@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CommonUtilities.Model
+namespace CommonUtilities.DataEntity
 {
     public partial class Book
     {
@@ -23,7 +23,7 @@ namespace CommonUtilities.Model
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
 
-        public virtual DigitalBooksUser AuthorNameNavigation { get; set; } = null!;
+        public virtual Userdetail AuthorNameNavigation { get; set; } = null!;
         public virtual ICollection<Payment> Payments { get; set; }
     }
 }

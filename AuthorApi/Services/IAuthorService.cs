@@ -1,12 +1,12 @@
 ﻿using CommonUtilities.Model;
-using CommonUtilities.ViewModels;
 using System.Security.Claims;
+using CommonUtilities.DataEntity;
 
 namespace AuthorApi.Services
 {
     public interface IAuthorService
     {
-        BookDatabaseContext dbContext { get; set; }
+        DigitalBookDatabaseContext dbContext { get; set; }
 
         string CreateAccount(UserAccount userAccount);
         string ValidateAuthorCred(string userName, string userPassword, ClaimsIdentity identity);

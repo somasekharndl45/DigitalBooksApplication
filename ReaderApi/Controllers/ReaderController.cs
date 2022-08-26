@@ -1,5 +1,5 @@
 ﻿using CommonUtilities.CommonVariables;
-using CommonUtilities.ViewModels;
+using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReaderApi.Services;
@@ -16,18 +16,12 @@ namespace ReaderApi.Controllers
         {
             _bookService = bookService;
         }
-
-        /// <summary>
-        /// Search available books
-        /// </summary>
-        /// <param name="searchBookFields">object has search fields to search book</param>
-        /// <returns>message on search book</returns>
         [HttpGet]
-        public ActionResult SearchBooks([FromBody] SearchBookFields searchBookFields)
+        public ActionResult SearchBooks([FromBody] BookProperties bookProperties)
         {
             try
             {
-                var books = _bookService.GetBooks(searchBookFields);
+                var books = _bookService.GetBooks(bookProperties);
                 if (books.Count == 0)
                 {
                     return NotFound(Common.bookNotfoundWithFilters);
@@ -59,7 +53,7 @@ namespace ReaderApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult ReadPurchasedBook([FromBody] ReadBook readBook)
+        public ActionResult ReadPurchasedBook([FromBody] BookRead readBook)
         {
             try
             {

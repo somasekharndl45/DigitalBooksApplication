@@ -1,6 +1,6 @@
-﻿namespace CommonUtilities.ViewModels
+﻿namespace CommonUtilities.Model
 {
-    public class UserCredential
+    public class UserCredentials
     {
         public string UserName { get; set; } = null!;
         public string Password { get; set; } = null!;
