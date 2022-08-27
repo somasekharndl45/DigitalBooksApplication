@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using CommonUtilities.Model;
 using CommonUtilities.DataEntity;
-using CommonUtilities.CommonVariables;
 
 namespace AuthorApi.Services
 {
@@ -29,16 +28,16 @@ namespace AuthorApi.Services
                     bookUser.UserRole = userAccount.UserRole;
                     dbContext.Userdetails.Add(bookUser);
                     dbContext.SaveChanges();
-                    return Common.userAccount;
+                    return "User Account created successfully";
                 }
                 else
                 {
-                    return Common.userAccountExists;
+                    return "User Account already exists";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Common.userAccountCreationError;
+                return "Error occurred while creating user account";
             }
         }
 
@@ -55,23 +54,23 @@ namespace AuthorApi.Services
                         var password = dbContext.Userdetails.Where(x => x.UserName == userName).Select(x => x.UserPass).FirstOrDefault();
                         if (password == userPassword)
                         {
-                            return Common.authorLoginSuccess;
+                            return "Account login successful";
                         }
                         else
                         {
-                            return Common.credentialIncorrect;
+                            return "UserName or Password is incorrect. Please try again";
                         }
                     }
                     else
                     {
-                        return Common.unathuorized;
+                        return "Unauthorized";
                     }
                 }
-                return Common.authorNotExists;                
+                return "Author doesn't exist";                
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return Common.authorLoginError;
+                return "Login error occurred";
             }
         }
     }

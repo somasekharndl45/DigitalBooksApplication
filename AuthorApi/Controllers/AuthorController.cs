@@ -1,5 +1,4 @@
 ﻿using AuthorApi.Services;
-using CommonUtilities.CommonVariables;
 using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +53,7 @@ namespace AuthorApi.Controllers
                 }
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -67,9 +66,9 @@ namespace AuthorApi.Controllers
                 string result = _bookService.CreateBook(addBook);
                 return Json(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Json(Common.bookAddedMsg);
+                return Json("Book added successfully");
             }
         }
         [HttpPut]

@@ -1,4 +1,4 @@
-﻿using CommonUtilities.CommonVariables;
+﻿
 using CommonUtilities.Model;
 using CommonUtilities.DataEntity;
 

@@ -1,5 +1,4 @@
 ﻿using CommonUtilities.Model;
-using CommonUtilities.CommonVariables;
 using CommonUtilities.DataEntity;
 
 namespace AuthorApi.Services
@@ -36,16 +35,16 @@ namespace AuthorApi.Services
 
                     dbContext.Books.Add(bookEntity);
                     dbContext.SaveChanges();
-                    return Common.bookAddedMsg;
+                    return "Book added successfully";
                 }
                 else
                 {
-                    return Common.bookNotAddedMsg;
+                    return "Author doesn't exists";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Common.generalError;
+                return "Some error occurred";
             }
         }
 
@@ -65,16 +64,16 @@ namespace AuthorApi.Services
                         bookToUpdate.Content = editBook.Content;
                     }
                     dbContext.SaveChanges();
-                    return Common.editbookMsg;
+                    return "Edited book successfully";
                 }
                 else
                 {
-                    return Common.bookNotFound;
+                    return "Book Not found";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Common.editbookErrorMsg;
+                return "Error occurred in edit book";
             }
         }
 
@@ -97,14 +96,14 @@ namespace AuthorApi.Services
                 dbContext.SaveChanges();
                 if (blockBook.Block)
                 {
-                    return Common.blockbookMsg;
+                    return "Blocked book successfully";
                 }
                 else
                 {
-                    return Common.unblockbookMsg;
+                    return "Blocked book successfully";
                 }
             }
-            return Common.bookNotFound;
+            return "Book Not found";
         }
     }
 }

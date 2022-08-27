@@ -1,4 +1,4 @@
-﻿using CommonUtilities.CommonVariables;
+﻿
 using CommonUtilities.Model;
 using CommonUtilities.DataEntity;
 
@@ -89,12 +89,12 @@ namespace ReaderApi.Services
                 }
                 else
                 {
-                    return Common.bookNotPurchased;
+                    return "Purchase book to read";
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Common.generalError;
+                return "Some error occurred";
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using CommonUtilities.CommonVariables;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -18,7 +17,7 @@ namespace WebApiAuthentication.Services
                 var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.UniqueName, userName),
-                new Claim("Role", Common.userRole)
+                new Claim("Role", "Author")
             };
 
                 claims.AddRange(audience.Select(aud => new Claim(JwtRegisteredClaimNames.Aud, aud)));
@@ -31,7 +30,7 @@ namespace WebApiAuthentication.Services
             }
             catch (Exception ex)
             {
-                return Common.tokenError;
+                return "Error error occurred while generating  authentication token";
             }            
         }
     }

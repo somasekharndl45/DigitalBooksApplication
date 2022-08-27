@@ -1,4 +1,4 @@
-﻿using CommonUtilities.CommonVariables;
+﻿
 using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +26,9 @@ namespace PaymentApi.Controllers
                 int result = _paymentService.BuyBook(buyerDetails);
                 return Json(result);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                return Json(Common.generalError);
+                return Json("Some error occurred");
             }
         }
 
@@ -41,7 +41,7 @@ namespace PaymentApi.Controllers
                 var result = _paymentService.GetInvoice(paymentId);
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch(Exception )
             {
                 return NotFound();
             }
@@ -61,12 +61,12 @@ namespace PaymentApi.Controllers
                 }
                 else
                 {
-                    return Ok(Common.paymentHistory);
+                    return Ok("No payment history available");
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return Ok(Common.generalError);
+                return Ok("Some error occurred");
             }
         }
 
@@ -78,9 +78,9 @@ namespace PaymentApi.Controllers
                 var result = _paymentService.GetRefund(paymentId);
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                return Ok(Common.generalError);
+                return Ok("Some error occurred");
             }           
         }
 

@@ -1,4 +1,4 @@
-﻿using CommonUtilities.CommonVariables;
+﻿
 using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,13 +24,13 @@ namespace ReaderApi.Controllers
                 var books = _bookService.GetBooks(bookProperties);
                 if (books.Count == 0)
                 {
-                    return NotFound(Common.bookNotfoundWithFilters);
+                    return NotFound("No book found change the filters and try ");
                 }
                 return Ok(books);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                return Ok(Common.generalError);
+                return Ok("Some error occurred");
             }
         }
 
@@ -42,13 +42,13 @@ namespace ReaderApi.Controllers
                 var books = _bookService.GetAllBook();
                 if (books.Count == 0)
                 {
-                    return Json(NotFound(Common.bookNotfoundWithFilters));
+                    return Json(NotFound("No book found change the filters and try "));
                 }
                 return Json(books);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                return Json(Common.generalError);
+                return Json("Some error occurred");
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using CommonUtilities.CommonVariables;
-using CommonUtilities.Model;
+﻿using CommonUtilities.Model;
 using Microsoft.AspNetCore.Mvc;
 using WebApiAuthentication.Services;
 using CommonUtilities.DataEntity;
@@ -24,7 +23,7 @@ namespace WebApiAuthentication.Controllers
 
 
         [HttpPost]
-        public JsonResult Authentication(UserCredentials userCredential)
+        public ActionResult Authentication(UserCredentials userCredential)
         {
             try
             {
@@ -57,7 +56,7 @@ namespace WebApiAuthentication.Controllers
             }
             catch(Exception ex)
             {
-                return Json(Common.tokenError);
+                return Json("Error occurred while generating  authentication token");
             }
         }
 
