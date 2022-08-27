@@ -1,4 +1,6 @@
-﻿using AuthorApi.Services;
+﻿using Author.Services;
+using AuthorApi.Services;
+using CommonUtilities.DataEntity;
 using CommonUtilities.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +18,7 @@ namespace AuthorApi.Controllers
 
         private readonly INotificationService _notificationService;
 
-        private IEnumerable<Claim> _claims;
+        //private IEnumerable<Claim> _claims;
 
         public AuthorController(IAuthorService authorService, IBookService bookService, INotificationService notificationService)
         {
@@ -38,6 +40,19 @@ namespace AuthorApi.Controllers
             {
                 return Json(ex);
             }
+        }
+        [HttpGet("GetAllBooks")]
+        public IEnumerable<Book> GetAllBook()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if(identity != null)
+            {
+                Appclaims appclaims = new Appclaims(identity);
+
+                if (!string.IsNullOrWhiteSpace(appclaims.AuthorName))
+                    return _authorService.GetAllBooks(appclaims.AuthorName);
+            }
+            return null;
         }
 
         [HttpGet]
@@ -72,7 +87,7 @@ namespace AuthorApi.Controllers
             }
         }
         [HttpPut]
-        public ActionResult EditBook([FromBody] BookTable editBook)
+        public ActionResult<string> EditBook([FromBody] BookTable editBook)
         {
             try
             {

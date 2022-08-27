@@ -61,6 +61,7 @@ namespace ReaderApi.Services
             foreach (var item in entityAll)
             {
                 BookInformation bookDetails = new BookInformation();
+                bookDetails.BookId = item.BookId;
                 bookDetails.AuthorName = item.AuthorName;
                 bookDetails.Publisher = item.Publisher;
                 bookDetails.PublishedDate = DateTime.UtcNow;

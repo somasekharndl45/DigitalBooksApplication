@@ -56,6 +56,8 @@ namespace AuthorApi.Services
                 var bookToUpdate = dbContext.Books.FirstOrDefault(x => x.BookId == editBook.BookId);
                 if (bookToUpdate != null)
                 {
+                    bookToUpdate.Price = editBook.Price;
+                    bookToUpdate.Category = editBook.Category;
                     bookToUpdate.Title = editBook.Title;
                     bookToUpdate.ModifiedDate = DateTime.Now;
                     bookToUpdate.Publisher = editBook.Publisher;

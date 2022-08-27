@@ -2,6 +2,7 @@
 {
     public class BookInformation
     {
+        public int BookId { get; set; }
         public byte[]? Logo { get; set; }
         public string Title { get; set; } = null!;
         public string AuthorName { get; set; } = null!;

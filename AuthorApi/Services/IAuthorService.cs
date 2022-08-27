@@ -10,6 +10,7 @@ namespace AuthorApi.Services
 
         string CreateAccount(UserAccount userAccount);
         string ValidateAuthorCred(string userName, string userPassword, ClaimsIdentity identity);
+        IEnumerable<Book> GetAllBooks(string authorName);
 
         //AppAuthorizations appAuthorizations(ClaimsIdentity identity);
     }

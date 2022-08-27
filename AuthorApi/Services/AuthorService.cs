@@ -13,6 +13,11 @@ namespace AuthorApi.Services
             dbContext = bookDatabaseContext;
         }
 
+        public IEnumerable<Book> GetAllBooks(string authorName)
+        {
+            var request = dbContext.Books.Where(x => x.AuthorName == authorName);
+            return request;
+        }
         
         public string CreateAccount(UserAccount userAccount)
         {
