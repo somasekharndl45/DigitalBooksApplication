@@ -42,13 +42,13 @@ namespace WebApiAuthentication.Controllers
                         audience,
                         userCredential.UserName);
                     string userRole = dbContext.Userdetails.Where(user => user.UserName == userCredential.UserName).Select(user => user.UserRole).FirstOrDefault();
-                    return Json(new
+                    return Ok(new
                     {
                         Token = token,
                         Role = userRole
                     });
                 }
-                return Json(new
+                return Ok(new
                 {
                     Token = string.Empty,
                     Role = false
